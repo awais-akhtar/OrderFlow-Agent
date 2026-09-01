@@ -1,0 +1,31 @@
+{
+  "name": "orderflow-menu-retrieval-v1",
+  "dataset_label": "synthetic-demo",
+  "cases": [
+    {
+      "id": "spicy-vegetarian",
+      "query": "I want something like spicy chicken pizza but vegetarian",
+      "relevant_skus": ["pizza-garden-heat-medium"]
+    },
+    {
+      "id": "classic-pepperoni",
+      "query": "a large classic pepperoni pizza",
+      "relevant_skus": ["pizza-pepperoni-large"]
+    },
+    {
+      "id": "vegetarian-garden",
+      "query": "vegetarian pizza with olives and mushrooms",
+      "relevant_skus": ["pizza-garden-medium", "pizza-garden-large", "pizza-garden-heat-medium"]
+    },
+    {
+      "id": "tandoori-medium",
+      "query": "medium tandoori chicken with peppers",
+      "relevant_skus": ["pizza-tandoori-medium"]
+    },
+    {
+      "id": "ranch-dip",
+      "query": "add a ranch sauce dip",
+      "relevant_skus": ["dip-ranch"]
+    }
+  ]
+}

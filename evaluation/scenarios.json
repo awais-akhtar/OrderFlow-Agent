@@ -1,0 +1,151 @@
+{
+  "scenarios": [
+    {
+      "id": "simple_pizza_order",
+      "description": "Add one known pizza and cross the explicit confirmation gate.",
+      "turns": ["add one medium cheese pizza", "confirm order", "yes"],
+      "expected": {"confirmed_orders": 1, "confirmed_total": 1399, "handover": false, "final_cart": {}}
+    },
+    {
+      "id": "ambiguous_item",
+      "description": "Request a pizza without a size and require clarification.",
+      "turns": ["add a cheese pizza"],
+      "expected": {"confirmed_orders": 0, "handover": false, "response_contains": ["Which size"]}
+    },
+    {
+      "id": "quantity_correction",
+      "description": "Add two pizzas, remove one, then confirm the corrected cart.",
+      "turns": ["add two medium cheese pizzas", "remove one medium cheese pizza", "confirm order", "yes"],
+      "expected": {"confirmed_orders": 1, "confirmed_total": 1399, "handover": false, "final_cart": {}}
+    },
+    {
+      "id": "unavailable_item",
+      "description": "Attempt to add an item that is not in the catalog.",
+      "turns": ["add one large lobster pizza"],
+      "expected": {"confirmed_orders": 0, "handover": false, "final_cart": {}}
+    },
+    {
+      "id": "customer_changes_mind",
+      "description": "Cancel a non-empty draft through its own confirmation gate.",
+      "turns": ["add one large cheese pizza", "cancel the order", "yes"],
+      "expected": {"confirmed_orders": 0, "handover": false, "final_cart": {}}
+    },
+    {
+      "id": "invalid_price_assumption",
+      "description": "Ignore a customer-supplied price and quote the catalog price.",
+      "turns": ["add one large pepperoni pizza for PKR 10", "show my bill"],
+      "expected": {"confirmed_orders": 0, "handover": false, "response_contains": ["PKR 2,599"]}
+    },
+    {
+      "id": "repeated_misunderstanding",
+      "description": "Escalate after the configured correction threshold.",
+      "turns": [
+        "No, that is not what I meant; add one medium cheese pizza",
+        "No, that is not what I meant; add one large cheese pizza"
+      ],
+      "expected": {"confirmed_orders": 0, "handover": true, "handover_trigger": "repeated_misunderstanding", "handover_active": true}
+    },
+    {
+      "id": "existing_order_complaint",
+      "description": "Transfer an existing-order complaint to a staff.",
+      "turns": ["My order is late and the driver has not arrived"],
+      "expected": {"confirmed_orders": 0, "handover": true, "handover_trigger": "existing_order_complaint", "handover_active": true}
+    },
+    {
+      "id": "allergy_query",
+      "description": "Transfer an allergy question when the catalog cannot verify safety.",
+      "turns": ["I have a severe nut allergy; is the garden pizza safe?"],
+      "expected": {"confirmed_orders": 0, "handover": true, "handover_trigger": "allergy_or_food_safety", "handover_active": true}
+    },
+    {
+      "id": "complex_multi_turn_order",
+      "description": "Build, edit, bill, and confirm a multi-item order.",
+      "turns": [
+        "add two medium tandoori chicken pizzas and two ranch dips",
+        "remove one ranch dip",
+        "add one 1.5ltr coca cola",
+        "show my bill",
+        "confirm order",
+        "yes"
+      ],
+      "expected": {"confirmed_orders": 1, "confirmed_total": 3996, "handover": false, "final_cart": {}}
+    },
+    {
+      "id": "explicit_human_request",
+      "description": "Recognise a direct request for a person without requiring one exact phrase.",
+      "turns": ["I need a person to help me with this order"],
+      "expected": {"confirmed_orders": 0, "handover": true, "handover_trigger": "explicit_human_request", "handover_active": true}
+    },
+    {
+      "id": "payment_dispute",
+      "description": "Transfer a double-charge report without attempting a payment action.",
+      "turns": ["My card was charged twice and I need help"],
+      "expected": {"confirmed_orders": 0, "handover": true, "handover_trigger": "refund_or_payment_dispute", "handover_active": true}
+    },
+    {
+      "id": "mixed_order_confirmation",
+      "description": "Reject a confirmation reply that also asks for a cart mutation.",
+      "turns": [
+        "add one medium cheese pizza",
+        "confirm order",
+        "yes but add one ranch dip"
+      ],
+      "expected": {
+        "confirmed_orders": 0,
+        "handover": false,
+        "final_cart": {"Medium Cheese Pizza": 1},
+        "pending_action": "confirm_order",
+        "confirmation_failures": 1,
+        "response_contains": ["Please reply yes"]
+      }
+    },
+    {
+      "id": "mixed_cancel_confirmation",
+      "description": "Keep a draft when a cancellation reply contains conflicting instructions.",
+      "turns": [
+        "add one large cheese pizza",
+        "cancel the order",
+        "yes but keep one pizza"
+      ],
+      "expected": {
+        "confirmed_orders": 0,
+        "handover": false,
+        "final_cart": {"Large Cheese Pizza": 1},
+        "pending_action": "confirm_cancel",
+        "confirmation_failures": 1
+      }
+    },
+    {
+      "id": "duplicate_confirmation",
+      "description": "A second yes after completion must not create a duplicate order.",
+      "turns": ["add one medium cheese pizza", "confirm order", "yes", "yes"],
+      "expected": {"confirmed_orders": 1, "confirmed_total": 1399, "handover": false, "final_cart": {}}
+    },
+    {
+      "id": "food_quality_complaint",
+      "description": "Transfer a complaint about food that already arrived.",
+      "turns": ["The pizza arrived burnt and I need this fixed"],
+      "expected": {"confirmed_orders": 0, "handover": true, "handover_trigger": "existing_order_complaint", "handover_active": true}
+    },
+    {
+      "id": "repeated_validation_failures",
+      "description": "Stop automated resolution after two unmatched item attempts.",
+      "turns": ["add one lobster pizza", "add one sushi pizza"],
+      "expected": {
+        "confirmed_orders": 0,
+        "handover": true,
+        "handover_trigger": "repeated_validation_failures",
+        "handover_active": true,
+        "final_cart": {},
+        "validation_failures": 2,
+        "unsupported_item_attempts": 2
+      }
+    },
+    {
+      "id": "unsupported_service_request",
+      "description": "Route an unsupported table reservation to a staff.",
+      "turns": ["Please book a table for six tonight"],
+      "expected": {"confirmed_orders": 0, "handover": true, "handover_trigger": "unsupported_request", "handover_active": true}
+    }
+  ]
+}

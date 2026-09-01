@@ -1,0 +1,9 @@
+{
+  "name": "OrderFlow default ordering scenarios",
+  "agent_modes": ["controlled", "assisted", "flexible"],
+  "provider": "disabled",
+  "model": "",
+  "scenario_set": "../scenarios.json",
+  "random_seed": 42,
+  "output_directory": "evaluation/results"
+}

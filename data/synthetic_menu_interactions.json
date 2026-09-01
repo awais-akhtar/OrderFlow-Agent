@@ -1,0 +1,18 @@
+{
+  "dataset_label": "synthetic",
+  "description": "Generated demonstration labels for exercising the optional menu-interest pipeline. These are not customer observations.",
+  "labels": {
+    "pizza-cheese-small": 0.42,
+    "pizza-cheese-medium": 0.58,
+    "pizza-cheese-large": 0.55,
+    "pizza-tandoori-small": 0.63,
+    "pizza-tandoori-medium": 0.79,
+    "pizza-tandoori-large": 0.74,
+    "pizza-pepperoni-medium": 0.72,
+    "pizza-pepperoni-large": 0.69,
+    "pizza-garden-medium": 0.61,
+    "pizza-garden-large": 0.57,
+    "side-breadsticks": 0.35,
+    "side-potato-wedges": 0.49
+  }
+}
